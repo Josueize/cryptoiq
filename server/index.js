@@ -1,0 +1,14 @@
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
+const cryptoRouter = require("./routes/crypto");
+const signalsRouter = require("./routes/signals");
+const sentimentRouter = require("./routes/sentiment");
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use("/api/crypto", cryptoRouter);
+app.use("/api/signals", signalsRouter);
+app.use("/api/sentiment", sentimentRouter);
+app.get("/", (req, res) => res.json({ status: "CryptoIQ running" }));
+app.listen(5000, () => console.log("Server running on http://localhost:5000"));
