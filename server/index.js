@@ -11,4 +11,5 @@ app.use("/api/crypto", cryptoRouter);
 app.use("/api/signals", signalsRouter);
 app.use("/api/sentiment", sentimentRouter);
 app.get("/", (req, res) => res.json({ status: "CryptoIQ running" }));
-app.listen(5000, () => console.log("Server running on http://localhost:5000"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, "0.0.0.0", () => console.log("Server running on port " + PORT));
