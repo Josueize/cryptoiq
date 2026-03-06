@@ -5,7 +5,7 @@ import SignalBadge from "../components/SignalBadge";
 import SentimentPanel from "../components/SentimentPanel";
 import Portfolio from "../components/Portfolio";
 
-const API = "https://cryptoiq-production.up.railway.app";
+const API = "https://cryptoiq-production-0444.up.railway.app";
 
 function Dashboard() {
   const [coins, setCoins] = useState([]);
