@@ -1,20 +1,33 @@
 const express = require("express");
 const router = express.Router();
-const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
+const BASE = "https://min-api.cryptocompare.com/data";
+const API_KEY = process.env.CRYPTOCOMPARE_API_KEY;
+const COINS = [
+  { id: "BTC", name: "Bitcoin" }, { id: "ETH", name: "Ethereum" },
+  { id: "BNB", name: "BNB" }, { id: "XRP", name: "XRP" },
+  { id: "SOL", name: "Solana" }, { id: "DOGE", name: "Dogecoin" },
+  { id: "ADA", name: "Cardano" }, { id: "TRX", name: "TRON" },
+  { id: "AVAX", name: "Avalanche" }, { id: "LINK", name: "Chainlink" }
+];
 router.get("/coins", async (req, res) => {
   try {
-    const url = COINGECKO_BASE + "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false";
+    const symbols = COINS.map(c => c.id).join(",");
+    const url = BASE + "/pricemultifull?fsyms=" + symbols + "&tsyms=USD&api_key=" + API_KEY;
     const response = await fetch(url);
     const data = await response.json();
-    const coins = data.map((coin) => ({
-      id: coin.id,
-      name: coin.name,
-      symbol: coin.symbol.toUpperCase(),
-      image: coin.image,
-      currentPrice: coin.current_price,
-      priceChange24h: coin.price_change_percentage_24h,
-      marketCap: coin.market_cap,
-    }));
+    const coins = COINS.map(coin => {
+      const info = data.RAW && data.RAW[coin.id] && data.RAW[coin.id].USD;
+      if (!info) return null;
+      return {
+        id: coin.id.toLowerCase(),
+        name: coin.name,
+        symbol: coin.id,
+        image: "https://www.cryptocompare.com" + info.IMAGEURL,
+        currentPrice: info.PRICE,
+        priceChange24h: info.CHANGEPCT24HOUR,
+        marketCap: info.MKTCAP
+      };
+    }).filter(Boolean);
     res.json(coins);
   } catch (error) {
     console.error("Coins route error:", error.message);
@@ -22,22 +35,24 @@ router.get("/coins", async (req, res) => {
   }
 });
 router.get("/prices/:coin", async (req, res) => {
-  const coin = req.params.coin;
+  const coin = req.params.coin.toUpperCase();
   try {
-    const priceUrl = COINGECKO_BASE + "/simple/price?ids=" + coin + "&vs_currencies=usd&include_24hr_change=true";
+    const priceUrl = BASE + "/price?fsym=" + coin + "&tsyms=USD&api_key=" + API_KEY;
     const priceResponse = await fetch(priceUrl);
     const priceData = await priceResponse.json();
-    if (!priceData[coin]) {
-      return res.status(404).json({ error: "Coin not found" });
-    }
-    const historyUrl = COINGECKO_BASE + "/coins/" + coin + "/market_chart?vs_currency=usd&days=7&interval=daily";
+    if (!priceData.USD) return res.status(404).json({ error: "Coin not found" });
+    const historyUrl = BASE + "/v2/histoday?fsym=" + coin + "&tsym=USD&limit=7&api_key=" + API_KEY;
     const historyResponse = await fetch(historyUrl);
     const historyData = await historyResponse.json();
-    const history = historyData.prices.map(([timestamp, price]) => ({
-      date: new Date(timestamp).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-      price: parseFloat(price.toFixed(2)),
+    const history = historyData.Data.Data.map(d => ({
+      date: new Date(d.time * 1000).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+      price: parseFloat(d.close.toFixed(2))
     }));
-    res.json({ coin, currentPrice: priceData[coin].usd, priceChange24h: priceData[coin].usd_24h_change, history });
+    const changeUrl = BASE + "/pricemultifull?fsyms=" + coin + "&tsyms=USD&api_key=" + API_KEY;
+    const changeResponse = await fetch(changeUrl);
+    const changeData = await changeResponse.json();
+    const change24h = changeData.RAW[coin].USD.CHANGEPCT24HOUR;
+    res.json({ coin, currentPrice: priceData.USD, priceChange24h: change24h, history });
   } catch (error) {
     console.error("Prices route error:", error.message);
     res.status(500).json({ error: "Failed to fetch prices" });

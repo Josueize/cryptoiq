@@ -1,17 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const { getSignal } = require("../utils/indicators");
-const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
+const BASE = "https://min-api.cryptocompare.com/data";
+const API_KEY = process.env.CRYPTOCOMPARE_API_KEY;
 router.get("/:coin", async (req, res) => {
-  const coin = req.params.coin;
+  const coin = req.params.coin.toUpperCase();
   try {
-    const url = COINGECKO_BASE + "/coins/" + coin + "/market_chart?vs_currency=usd&days=30&interval=daily";
+    const url = BASE + "/v2/histoday?fsym=" + coin + "&tsym=USD&limit=30&api_key=" + API_KEY;
     const response = await fetch(url);
     const data = await response.json();
-    if (!data.prices || data.prices.length === 0) {
-      return res.status(404).json({ error: "No price data found" });
-    }
-    const prices = data.prices.map(([, price]) => price);
+    if (!data.Data || !data.Data.Data) return res.status(404).json({ error: "No price data found" });
+    const prices = data.Data.Data.map(d => d.close);
     const result = getSignal(prices);
     res.json({ coin, signal: result.signal, rsi: result.rsi, ma7: result.ma7, currentPrice: result.currentPrice, explanation: getExplanation(result) });
   } catch (error) {
