@@ -9,7 +9,7 @@ const API = "https://cryptoiq-production.up.railway.app";
 
 function Dashboard() {
   const [coins, setCoins] = useState([]);
-  const [selectedCoin, setSelectedCoin] = useState("bitcoin");
+  const [selectedCoin, setSelectedCoin] = useState("BTC");
   const [priceData, setPriceData] = useState(null);
   const [signalData, setSignalData] = useState(null);
   const [sentimentData, setSentimentData] = useState(null);
