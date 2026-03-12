@@ -37,12 +37,11 @@ The app will open at http://localhost:3000
 
 The screenshot is a sample of my project
 
-![coinsmarketprice.png](./coinsmarketprice.png)
-![News channe](./newschannel.png)
-![Porfolio Tracker](./porfoloioTracker.png)
-![Ai Sentiment Analysis](./AiSentimentAnalysis.png)
-![Actual Btc price](./Actualbtcprice.png)
-![ethereum price.png](./ethereumprice.png)
+![Actual Btc price](BtcCoinMarketCapActualprice.png)
+![News channe](screenshotOfGlobalnews.png)
+![Porfolio Tracker](screenshotPortfolioTracker.png)
+![Crypto IQ BTC price](screenshotCryptoIqBtcprice.png)
+![Crypto IQ ETHER price](screenshotCryptoIQethereumprice.png)
 
 ## Author
 Josue (Izehiuwa Igiebor Omogiate)
