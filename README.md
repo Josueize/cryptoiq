@@ -1,4 +1,4 @@
-# CryptoIQ — AI-Powered Crypto Market Intelligence Dashboard
+# CryptoIQ ï¿½ AI-Powered Crypto Market Intelligence Dashboard
 
 A full-stack crypto intelligence dashboard that aggregates live prices, technical indicators, and AI-powered sentiment analysis in one place.
 
@@ -34,6 +34,15 @@ The app will open at http://localhost:3000
 ## Projects Presented
 
 - CryptoIQ: Live crypto prices, RSI signals, AI sentiment analysis, portfolio tracker
+
+The screenshot is a sample of my project
+
+![coinsmarketprice.png](./coinsmarketprice.png)
+![News channe](./newschannel.png)
+![Porfolio Tracker](./porfoloioTracker.png)
+![Ai Sentiment Analysis](./AiSentimentAnalysis.png)
+![Actual Btc price](./Actualbtcprice.png)
+![ethereum price.png](./ethereumprice.png)
 
 ## Author
 Josue (Izehiuwa Igiebor Omogiate)
